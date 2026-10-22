@@ -1,0 +1,3 @@
+import 'dotenv/config';import mongoose from 'mongoose';import bcrypt from 'bcryptjs';import {Owner} from '../src/models/index.js';
+if(!process.env.MONGODB_URI||!process.env.OWNER_EMAIL||!process.env.OWNER_PASSWORD||!process.env.JWT_SECRET){console.error('Set MONGODB_URI, OWNER_EMAIL, OWNER_PASSWORD and JWT_SECRET in .env first.');process.exit(1)}
+await mongoose.connect(process.env.MONGODB_URI);const email=process.env.OWNER_EMAIL.toLowerCase();const passwordHash=await bcrypt.hash(process.env.OWNER_PASSWORD,12);await Owner.findOneAndUpdate({email},{email,passwordHash,role:'owner'},{upsert:true,new:true});console.log(`Owner account ready: ${email}`);await mongoose.disconnect();

@@ -1,0 +1,6 @@
+import {Router} from 'express';
+import {Order} from '../models/index.js';
+import {protect} from '../middleware/auth.js';
+const r=Router();
+r.post('/order/:id',protect,async(req,res)=>{const order=await Order.findById(req.params.id).lean();if(!order)return res.status(404).json({message:'Order not found'});const cafeNumber=String(process.env.CAFE_WHATSAPP||'').replace(/\D/g,'');if(!cafeNumber)return res.status(503).json({message:'Configure CAFE_WHATSAPP on the server first'});const lines=[`${process.env.CAFE_NAME||'The Good Cup'} · Order ${order.orderNumber}`,`Guest: ${order.customer.name} (${order.customer.phone})`,`Date: ${order.createdAt.toISOString()}`,`Type: ${order.type}${order.table?` · Table ${order.table}`:''}${order.customer.address?` · ${order.customer.address}`:''}`,...order.items.map(i=>`${i.quantity} × ${i.name} · ₹${i.unitPrice} each = ₹${i.lineTotal}`),`Subtotal: ₹${order.totals.subtotal}`,`Tax: ₹${order.totals.tax}`,`Delivery: ₹${order.totals.delivery}`,`Total: ₹${order.totals.total}`,`Payment: ${order.payment} (${order.paymentStatus})`,`Status: ${order.status}`,order.instructions?`Note: ${order.instructions}`:''].filter(Boolean);const url=`https://wa.me/${cafeNumber}?text=${encodeURIComponent(lines.join('\n'))}`;res.json({url,mode:'click-to-chat',requiresCustomerOrOwnerToPressSend:true})});
+export default r;
