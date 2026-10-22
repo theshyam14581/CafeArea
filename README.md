@@ -22,6 +22,18 @@ A React/Vite customer site and owner dashboard with an Express/Mongoose API. The
 
 The public menu page uses the curated sample menu in `src/data/menu.js`; `npm run seed-menu` puts matching IDs and trusted prices into MongoDB for orders. Never place Atlas credentials, JWT secrets, or WhatsApp API tokens in frontend variables.
 
+## Deploy to Render
+
+The repo includes `render.yaml` for a single Render web service. Express serves both the built Vite site and the `/api` routes, so the customer app and backend share one origin.
+
+1. Create a MongoDB Atlas cluster and database user. In Atlas **Network Access**, temporarily allow your current IP so you can seed the database. Keep `MONGODB_URI` private.
+2. On your computer, set the Atlas URI and owner credentials in `.env`, then run `npm run seed-owner` and `npm run seed-menu` once.
+3. In Render, choose **New → Blueprint**, connect `theshyam14581/CafeArea`, and select the `main` branch. Render reads `render.yaml`; enter the prompted `MONGODB_URI`, `OWNER_EMAIL`, `OWNER_PASSWORD`, and `CAFE_WHATSAPP` values. Keep the generated `JWT_SECRET` private.
+4. After the first deploy, open the service’s **Connect → Outbound** details and add the listed Render IP ranges to the Atlas IP access list. Atlas accepts trusted addresses and CIDR ranges; avoid `0.0.0.0/0` because it allows connection attempts from anywhere.
+5. Wait for the `/api/health` deploy check to pass, then open the `onrender.com` URL. Sign in at `/admin`.
+
+Render can redeploy from the connected GitHub branch after future pushes. The free web service may sleep while idle, so its first request after inactivity can take longer. See [Render’s Express deployment guide](https://render.com/docs/deploy-node-express-app), [Render environment variables](https://render.com/docs/configure-environment-variables), and [Atlas IP access lists](https://www.mongodb.com/docs/atlas/security/add-ip-address-to-list/).
+
 ## API routes
 
 | Route | Access | Purpose |

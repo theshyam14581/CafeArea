@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: cafearea
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm run server
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: OWNER_EMAIL
+        sync: false
+      - key: OWNER_PASSWORD
+        sync: false
+      - key: CAFE_NAME
+        value: The Good Cup
+      - key: CAFE_WHATSAPP
+        sync: false
