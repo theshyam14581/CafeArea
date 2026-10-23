@@ -1,5 +1,5 @@
 const photos={indian:'photo-1631452180519-c014fe946bc7',rajasthani:'photo-1601050690597-df0568f70950',chinese:'photo-1512058564366-18510be2db19',continental:'photo-1579751626657-72bc17010498',cafe:'photo-1553909489-cd47e0ef937f',beverages:'photo-1461023058943-07fcbe16d735',desserts:'photo-1578985545062-69928b1d9587',breakfast:'photo-1533089860892-a7c6f0a88666'};
-const img=(key)=>`https://images.unsplash.com/${photos[key]}?auto=format&fit=crop&w=900&q=85`;
+const img=(key)=>`https://images.unsplash.com/${photos[key]||photos.cafe}?auto=format&fit=crop&w=900&q=85`;
 const rows=[
  ['paneer-butter-masala','Paneer Butter Masala','Indian','Creamy tomato gravy, soft paneer, a little kasuri methi. Made for scooping up with warm naan.',295,'indian',true,18,true,'House favourite'],
  ['dal-makhani','Slow-Cooked Dal Makhani','Indian','Black lentils simmered overnight with butter, cream and a gentle smoky finish.',265,'indian',true,20,true,'Slow cooked'],
