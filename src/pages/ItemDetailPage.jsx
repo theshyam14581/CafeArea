@@ -34,7 +34,13 @@ export default function ItemDetailPage() {
 
   const handleAddToCart = () => {
     addToCart(item, qty);
-    showToast(`${qty} × ${item.name} added to your bag`);
+    showToast({
+      title: 'Added to Bag',
+      message: `${qty} × ${item.name} added to your bag`,
+      type: 'cart',
+      image: item.image,
+      duration: 3600,
+    });
   };
 
   return (

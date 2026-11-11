@@ -15,7 +15,13 @@ export default function FoodCard({ item, index = 0 }) {
     e.preventDefault();
     e.stopPropagation();
     addToCart(item, 1);
-    showToast(`${item.name} added to your bag`);
+    showToast({
+      title: 'Added to Bag',
+      message: `${item.name} added to your bag`,
+      type: 'cart',
+      image: item.image,
+      duration: 3600,
+    });
   };
 
   const handleLike = (e) => {
