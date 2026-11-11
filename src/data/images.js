@@ -1,35 +1,39 @@
-const scenes = {
-  indian: ['🍛', '#c68758', '#f4d9a7'],
-  rajasthani: ['🥘', '#b96846', '#f1c67f'],
-  chinese: ['🥡', '#7c8b56', '#e5c888'],
-  continental: ['🍕', '#b87552', '#edc18c'],
-  cafe: ['🥪', '#8a7952', '#e3d1a4'],
-  beverages: ['☕', '#76614b', '#dcc5a1'],
-  desserts: ['🍰', '#a66d76', '#efd0c8'],
-  breakfast: ['🥞', '#a47b49', '#f2d595'],
-  hero: ['☕', '#687044', '#e7d5b7'],
-  story: ['🍰', '#8b684f', '#e7c9a2'],
+// Real, authentic high-resolution cafe & food photography from Unsplash
+const unsplash = (id, width = 900, q = 85) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=${q}`;
+
+export const realImages = {
+  hero: unsplash('photo-1554118811-1e0d58224f24', 1400, 90),
+  story: unsplash('photo-1445116572660-236099ec97a0', 1100, 85),
+  indian: unsplash('photo-1589302168068-964664d93dc0', 800),
+  rajasthani: unsplash('photo-1601050690597-df0568f70950', 800),
+  chinese: unsplash('photo-1585032226651-759b368d7246', 800),
+  continental: unsplash('photo-1604382355076-af4b0eb60143', 800),
+  cafe: unsplash('photo-1553909489-cd47e0ef937f', 800),
+  beverages: unsplash('photo-1534778101976-62847782c213', 800),
+  desserts: unsplash('photo-1578985545062-69928b1d9587', 800),
+  breakfast: unsplash('photo-1528207776546-365bb710ee93', 800),
+  coolers: unsplash('photo-1513558161293-cdaf765ed2fd', 800),
 };
 
-function makeIllustration([emoji, dark, light], title) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="${light}"/><stop offset="1" stop-color="${dark}"/></linearGradient></defs><rect width="900" height="650" fill="url(#g)"/><circle cx="720" cy="120" r="190" fill="#fff" opacity=".13"/><circle cx="150" cy="570" r="230" fill="#fff" opacity=".1"/><path d="M0 485 Q220 430 450 490 T900 470 V650 H0Z" fill="#fff" opacity=".16"/><text x="450" y="365" text-anchor="middle" font-size="190" font-family="'Apple Color Emoji','Segoe UI Emoji',sans-serif">${emoji}</text><text x="450" y="565" text-anchor="middle" font-size="25" letter-spacing="5" font-family="Georgia,serif" fill="#fff" opacity=".9">${title}</text></svg>`;
+export function fallbackSvg(label = 'The Good Cup') {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4e5637"/><stop offset="1" stop-color="#2c301f"/></linearGradient></defs><rect width="800" height="600" fill="url(#g)"/><circle cx="400" cy="270" r="110" fill="#ffffff18"/><text x="400" y="295" font-size="80" text-anchor="middle" fill="#f4f1e9">☕</text><text x="400" y="440" font-family="Georgia,serif" font-size="28" letter-spacing="4" text-anchor="middle" fill="#eae7dc" opacity=".95">${label.toUpperCase()}</text></svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
-const images = Object.fromEntries(Object.entries(scenes).map(([key, scene]) => [key, makeIllustration(scene, key === 'hero' ? 'A LITTLE CORNER FOR GOOD THINGS' : key === 'story' ? 'FRESH FROM OUR KITCHEN' : key.toUpperCase())]));
-
 export function categoryImage(category = '') {
-  const value = category.toLowerCase();
-  if (value.includes('rajasthani')) return images.rajasthani;
-  if (value.includes('chinese')) return images.chinese;
-  if (value.includes('continental')) return images.continental;
-  if (value.includes('cafe') || value.includes('snack')) return images.cafe;
-  if (value.includes('coffee') || value.includes('tea') || value.includes('cooler')) return images.beverages;
-  if (value.includes('sweet') || value.includes('dessert')) return images.desserts;
-  if (value.includes('breakfast')) return images.breakfast;
-  if (value.includes('indian')) return images.indian;
-  return images.cafe;
+  const value = String(category).toLowerCase();
+  if (value.includes('rajasthani')) return realImages.rajasthani;
+  if (value.includes('chinese') || value.includes('wok')) return realImages.chinese;
+  if (value.includes('continental') || value.includes('pizza') || value.includes('pasta')) return realImages.continental;
+  if (value.includes('dessert') || value.includes('sweet') || value.includes('cake')) return realImages.desserts;
+  if (value.includes('breakfast')) return realImages.breakfast;
+  if (value.includes('cooler') || value.includes('soda')) return realImages.coolers;
+  if (value.includes('coffee') || value.includes('tea') || value.includes('beverage')) return realImages.beverages;
+  if (value.includes('indian')) return realImages.indian;
+  return realImages.cafe;
 }
 
-export const cafeHeroImage = images.hero;
-export const cafeStoryImage = images.story;
+export const cafeHeroImage = realImages.hero;
+export const cafeStoryImage = realImages.story;
+export const defaultFoodPlaceholder = realImages.cafe;
