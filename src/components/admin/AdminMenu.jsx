@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { money } from '../../utils/formatters.js';
 import { menuItems as defaultMenuItems, categories } from '../../data/menu.js';
-import { categoryImage, defaultFoodPlaceholder } from '../../data/images.js';
+import { categoryImage, defaultFoodPlaceholder, fallbackSvg } from '../../data/images.js';
 
 export default function AdminMenu({ toast, token }) {
   const [items, setItems] = useState(defaultMenuItems);
@@ -151,9 +151,15 @@ export default function AdminMenu({ toast, token }) {
                   <div className="menu-row">
                     <img
                       src={m.image}
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = categoryImage(m.category);
+                        if (!e.currentTarget.dataset.fallback) {
+                          e.currentTarget.dataset.fallback = 'category';
+                          e.currentTarget.src = categoryImage(m.category);
+                        } else {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = fallbackSvg(m.name || m.category);
+                        }
                       }}
                       alt=""
                     />

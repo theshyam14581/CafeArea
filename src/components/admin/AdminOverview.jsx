@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { money } from '../../utils/formatters.js';
 import { menuItems } from '../../data/menu.js';
-import { categoryImage } from '../../data/images.js';
+import { categoryImage, fallbackSvg } from '../../data/images.js';
 
 export default function AdminOverview({ orders, setTab }) {
   const today = new Date().toDateString();
@@ -111,9 +111,15 @@ export default function AdminOverview({ orders, setTab }) {
                 <span className="best-number">0{i + 1}</span>
                 <img
                   src={m.image}
+                  referrerPolicy="no-referrer"
                   onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = categoryImage(m.category);
+                    if (!e.currentTarget.dataset.fallback) {
+                      e.currentTarget.dataset.fallback = 'category';
+                      e.currentTarget.src = categoryImage(m.category);
+                    } else {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = fallbackSvg(m.name || m.category);
+                    }
                   }}
                   alt=""
                 />

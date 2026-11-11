@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { money } from '../../utils/formatters.js';
-import { categoryImage } from '../../data/images.js';
+import { categoryImage, fallbackSvg } from '../../data/images.js';
 import { useCart } from '../../context/CartContext.jsx';
 
 export default function CartItem({ item }) {
@@ -13,9 +13,15 @@ export default function CartItem({ item }) {
       <img
         src={item.image}
         alt={item.name}
+        referrerPolicy="no-referrer"
         onError={(e) => {
-          e.currentTarget.onerror = null;
-          e.currentTarget.src = categoryImage(item.category);
+          if (!e.currentTarget.dataset.fallback) {
+            e.currentTarget.dataset.fallback = 'category';
+            e.currentTarget.src = categoryImage(item.category);
+          } else {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = fallbackSvg(item.name || item.category);
+          }
         }}
       />
       <div className="cart-item-copy">

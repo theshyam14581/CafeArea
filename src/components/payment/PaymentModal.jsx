@@ -188,6 +188,7 @@ export default function PaymentModal({ isOpen, onClose, total, onPaymentSuccess,
                       src={getUpiQrUrl(total, cafeUpiId)}
                       alt="UPI QR Code"
                       className="qr-image"
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
                         e.currentTarget.onerror = null;
                         e.currentTarget.src =

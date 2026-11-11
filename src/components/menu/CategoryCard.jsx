@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
-import { categoryImage } from '../../data/images.js';
+import { categoryImage, fallbackSvg } from '../../data/images.js';
 
 export default function CategoryCard({ category, index = 0, total = 4 }) {
   const paddedIndex = String(index + 1).padStart(2, '0');
@@ -16,9 +16,15 @@ export default function CategoryCard({ category, index = 0, total = 4 }) {
         src={category.image}
         alt={category.name}
         loading="lazy"
+        referrerPolicy="no-referrer"
         onError={(e) => {
-          e.currentTarget.onerror = null;
-          e.currentTarget.src = categoryImage(category.name);
+          if (!e.currentTarget.dataset.fallback) {
+            e.currentTarget.dataset.fallback = 'category';
+            e.currentTarget.src = categoryImage(category.name);
+          } else {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = fallbackSvg(category.name);
+          }
         }}
       />
       <span className="category-count">

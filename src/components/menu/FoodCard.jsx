@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock3, Heart, Plus } from 'lucide-react';
 import { money } from '../../utils/formatters.js';
-import { categoryImage } from '../../data/images.js';
+import { categoryImage, fallbackSvg } from '../../data/images.js';
 import { useCart } from '../../context/CartContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
 
@@ -31,9 +31,15 @@ export default function FoodCard({ item, index = 0 }) {
           src={item.image}
           alt={item.name}
           loading="lazy"
+          referrerPolicy="no-referrer"
           onError={(e) => {
-            e.currentTarget.onerror = null;
-            e.currentTarget.src = categoryImage(item.category);
+            if (!e.currentTarget.dataset.fallback) {
+              e.currentTarget.dataset.fallback = 'category';
+              e.currentTarget.src = categoryImage(item.category);
+            } else {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = fallbackSvg(item.name || item.category);
+            }
           }}
         />
         <span className="food-tag">{item.tag || item.category}</span>

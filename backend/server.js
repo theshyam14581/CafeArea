@@ -14,7 +14,23 @@ import { protect } from './src/middleware/auth.js';
 import { Order, CafeSettings } from './src/models/index.js';
 
 const app=express();
-app.use(helmet());app.use(cors({origin:process.env.CLIENT_ORIGIN||'http://localhost:5173'}));app.use(express.json({limit:'30kb'}));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
+      imgSrc: ["'self'", "data:", "blob:", "https:", "http:"],
+      connectSrc: ["'self'", "https:", "http:"],
+      upgradeInsecureRequests: null,
+    },
+  },
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginEmbedderPolicy: false,
+}));
+app.use(cors({origin:process.env.CLIENT_ORIGIN||'http://localhost:5173'}));
+app.use(express.json({limit:'30kb'}));
 app.use('/api',rateLimit({windowMs:15*60*1000,limit:250,standardHeaders:true,legacyHeaders:false}));
 app.get('/api/health',(_,res)=>res.json({ok:true,service:'The Good Cup API'}));
 app.use('/api/auth',authRoutes);app.use('/api/menu',menuRoutes);app.use('/api/orders',orderRoutes);app.use('/api/billing',billingRoutes);app.use('/api/whatsapp',whatsappRoutes);

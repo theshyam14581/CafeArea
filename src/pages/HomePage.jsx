@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Clock3, Coffee } from 'lucide-react';
 import { useMenuData } from '../hooks/useMenuData.js';
 import { categories } from '../data/menu.js';
-import { cafeHeroImage, cafeStoryImage } from '../data/images.js';
+import { cafeHeroImage, cafeStoryImage, fallbackSvg } from '../data/images.js';
 import FoodCard from '../components/menu/FoodCard.jsx';
 import CategoryCard from '../components/menu/CategoryCard.jsx';
 
@@ -54,9 +54,10 @@ export default function HomePage() {
           <img
             src={cafeHeroImage}
             alt="Sunlit neighborhood cafe interior"
+            referrerPolicy="no-referrer"
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = cafeHeroImage;
+              e.currentTarget.src = fallbackSvg('The Good Cup');
             }}
           />
           <div className="image-note">
@@ -137,9 +138,10 @@ export default function HomePage() {
           <img
             src={cafeStoryImage}
             alt="Warm cafe counter"
+            referrerPolicy="no-referrer"
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = cafeStoryImage;
+              e.currentTarget.src = fallbackSvg('Kitchen Story');
             }}
           />
           <span className="story-stamp">

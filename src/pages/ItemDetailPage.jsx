@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Clock3, Leaf, Minus, Plus, ShoppingBag, ArrowLeft } from 'lucide-react';
 import { useMenuData } from '../hooks/useMenuData.js';
 import { money } from '../utils/formatters.js';
-import { categoryImage } from '../data/images.js';
+import { categoryImage, fallbackSvg } from '../data/images.js';
 import { useCart } from '../context/CartContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 
@@ -43,9 +43,15 @@ export default function ItemDetailPage() {
         <img
           src={item.image}
           alt={item.name}
+          referrerPolicy="no-referrer"
           onError={(e) => {
-            e.currentTarget.onerror = null;
-            e.currentTarget.src = categoryImage(item.category);
+            if (!e.currentTarget.dataset.fallback) {
+              e.currentTarget.dataset.fallback = 'category';
+              e.currentTarget.src = categoryImage(item.category);
+            } else {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = fallbackSvg(item.name || item.category);
+            }
           }}
         />
         <span className="food-tag">{item.category}</span>
